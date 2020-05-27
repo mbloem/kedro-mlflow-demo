@@ -1,14 +1,25 @@
 # Kedro + MLflow Demo
 
+This is a demo of how Kedro & MLflow can be used together, based on the instructions provided in [this article](https://medium.com/@QuantumBlack/deploying-and-versioning-data-pipelines-at-scale-942b1d81b5f5#).
+The demo is based on the example Iris project that Kedro optionally provides during creation of a new Kedro project.
+
+This project was created to serve as a demo for [a meetup talk](https://www.meetup.com/Data-Science-and-Analytics-West-Michigan/events/270553236/).
+
 ## Overview
 
-This is your new Kedro project, which was generated using `Kedro 0.16.1` by running:
+This is a Kedro+MLflow project.
+It was generated using `Kedro 0.16.1` by running:
 
 ```
 kedro new
 ```
 
-Take a look at the [documentation](https://kedro.readthedocs.io) to get started.
+Then, a couple of MLflow files (`MLproject` and `conda.yml`) and the `mlruns` directory were added to the project per the example [here](https://medium.com/@QuantumBlack/deploying-and-versioning-data-pipelines-at-scale-942b1d81b5f5#).
+Some MLflow code was also added in `src/kedro_mlflow_demo/pipelines/data_science/nodes.py` to log models, results, etc.
+
+Take a look at the [Kedro documentation](https://kedro.readthedocs.io) and the [MLflow documentation](https://mlflow.org/docs/latest/index.html) for more help getting started.
+
+The remainder of the readme is mostly what Kedro provides when creating a new project, with a few small changes regarding MLflow integration.
 
 ## Rules and guidelines
 
@@ -20,9 +31,22 @@ In order to get the best out of the template:
  * Don't commit any credentials or local configuration to your repository
  * Keep all credentials or local configuration in `conf/local/`
 
-## Installing dependencies
+## Setting up environment and installing dependencies
 
-Declare any dependencies in `src/requirements.txt` for `pip` installation and `src/environment.yml` for `conda` installation.
+Create a new Anaconda environment for this project with a command like:
+
+```
+conda create -n kedro-mlflow-demo-env python=3.7
+```
+
+Then activate the environment and install Kedro:
+
+```
+conda activate kedro-mlflow-demo-env
+pip install kedro
+```
+
+Dependencies are declared in `src/requirements.txt` for `pip` installation within the conda environment.
 
 To install them, run:
 
@@ -30,13 +54,24 @@ To install them, run:
 kedro install
 ```
 
-## Running Kedro
-
-You can run your Kedro project with:
+Ensure that MLflow 1.8 or greater was installed with:
 
 ```
-kedro run
+mlflow --version
 ```
+
+## Running Kedro+MLflow projects
+
+You can run the Kedro+MLflow project by executing (from the base eon-service directory):
+
+```
+mlflow run . -e <entry_point_name>
+```
+
+Where `<entry_point_name>` is replaced by an entry point in the `MLproject` file.
+These entry points should all specify Kedro pipelines to run via `kedro run` commands.
+
+Note that when running on Windows, it is recommendted to use the `--no-conda` option for this command, as the MLflow automatic generation and usage of anaconda environments does not yet seem to work very well on Windows.
 
 ## Testing Kedro
 
