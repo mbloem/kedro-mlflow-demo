@@ -62,7 +62,19 @@ mlflow --version
 
 ## Running Kedro+MLflow projects
 
-You can run the Kedro+MLflow project by executing (from the base eon-service directory):
+Some MLflow environmental variables (`MLFLOW_CONDA_HOME`, `MLFLOW_TRACKING_URI`, `MLFLOW_EXPERIMENT_NAME`) must be set prior to running the project.
+To set these, update `config-mlflow-template.sh` based on your environment, move it to `conf/local` (to keep the version based on your particular set up out of version control), and run it.
+Depending on what shell you are using you may need to set your environmental variables differently than is specified in this shell script.
+
+Create an MLflow experiment with the name specified in `MLFLOW_EXPERIMENT_NAME`:
+
+```
+mlflow experiments create -n <experiment_name>
+```
+
+where `<experiment_name>` is replaced with the name set in `MLFLOW_EXPERIMENT_NAME` (e.g., `iris-example`).
+
+You can run the Kedro+MLflow project by executing (from the base `kedro-mlflow-demo` directory):
 
 ```
 mlflow run . -e <entry_point_name>
