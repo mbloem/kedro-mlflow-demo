@@ -45,6 +45,8 @@ from sklearn import metrics
 from sklearn.linear_model import LogisticRegression
 from sklearn.base import BaseEstimator
 from sklearn.pipeline import Pipeline as sklearn_Pipeline
+from sklearn.preprocessing import StandardScaler, MinMaxScaler
+from sklearn.compose import ColumnTransformer, make_column_transformer
 
 
 def train_model(
@@ -61,12 +63,48 @@ def train_model(
     model_params = parameters['model_params']
     model = LogisticRegression(**model_params)
 
-    # Make pipeline
-    model_pipeline = sklearn_Pipeline(
-        steps=[
-            ('model', model),
-        ]
-    )
+    if parameters['model_standard_scaler']:
+        # Prepare column transformer to do scaling
+        col_transformer = ColumnTransformer(
+            [
+                (
+                    'standard_scaler_sl',
+                    StandardScaler(),
+                    ["sepal_length"],
+                ),
+                (
+                    'standard_scaler_sw',
+                    StandardScaler(),
+                    ["sepal_width"],
+                ),
+                (
+                    'standard_scaler_pl',
+                    StandardScaler(),
+                    ["petal_length"],
+                ),
+                (
+                    'standard_scaler_pw',
+                    StandardScaler(),
+                    ["petal_width"],
+                ),
+            ],
+            remainder='passthrough',
+        )
+
+        # Make pipeline w/ scaler
+        model_pipeline = sklearn_Pipeline(
+            steps=[
+                ('col_transformer', col_transformer),
+                ('model', model),
+            ]
+        )
+    else:
+        # Make pipeline w/o scaler
+        model_pipeline = sklearn_Pipeline(
+            steps=[
+                ('model', model),
+            ]
+        )
 
     # Fit
     model_pipeline.fit(train_x, train_y)
@@ -74,7 +112,7 @@ def train_model(
     mlflow_sklearn.log_model(sk_model=model_pipeline, artifact_path="model")
     mlflow.log_params(model_params)
 
-    return model
+    return model_pipeline
 
 
 def predict(

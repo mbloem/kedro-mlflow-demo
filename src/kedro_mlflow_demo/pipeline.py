@@ -62,5 +62,7 @@ def create_pipelines(**kwargs) -> Dict[str, Pipeline]:
         "de_no_scaling": data_engineering_pipelines['data_engr_no_scaling'],
         "de_scaling": data_engineering_pipelines['data_engr_scaling'],
         "ds": data_science_pipeline,
+        "full_de_scaling": data_engineering_pipelines['data_engr_scaling'] + data_science_pipeline,
+        "full_no_de_scaling": data_engineering_pipelines['data_engr_no_scaling'] + data_science_pipeline,
         "__default__": data_engineering_pipelines['data_engr_scaling'] + data_science_pipeline,
     }

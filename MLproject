@@ -3,3 +3,7 @@ conda_env: conda.yaml
 entry_points:
   main:
     command: "kedro run"
+  full_no_de_scaling:
+    command: "kedro run --pipeline full_no_de_scaling"
+  full_de_scaling:
+    command: "kedro run --pipeline full_de_scaling"

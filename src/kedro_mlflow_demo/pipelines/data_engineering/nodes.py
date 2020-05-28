@@ -84,8 +84,14 @@ def standardize_features(
 ) -> Dict[str, Any]:
     scaler = StandardScaler()
     scaler.fit(train_x)
-    train_x = scaler.transform(train_x)
-    test_x = scaler.transform(test_x)
+    train_x = pd.DataFrame(
+        columns=train_x.columns,
+        data=scaler.transform(train_x)
+    )
+    test_x = pd.DataFrame(
+        columns=test_x.columns,
+        data=scaler.transform(test_x)
+    )
 
     return dict(
         train_x=train_x,
