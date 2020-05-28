@@ -55,11 +55,12 @@ def create_pipelines(**kwargs) -> Dict[str, Pipeline]:
 
     """
 
-    data_engineering_pipeline = de.create_pipeline()
+    data_engineering_pipelines = de.create_pipelines()
     data_science_pipeline = ds.create_pipeline()
 
     return {
-        "de": data_engineering_pipeline,
+        "de_no_scaling": data_engineering_pipelines['data_engr_no_scaling'],
+        "de_scaling": data_engineering_pipelines['data_engr_scaling'],
         "ds": data_science_pipeline,
-        "__default__": data_engineering_pipeline + data_science_pipeline,
+        "__default__": data_engineering_pipelines['data_engr_scaling'] + data_science_pipeline,
     }

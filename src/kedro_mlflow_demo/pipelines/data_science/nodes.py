@@ -44,13 +44,14 @@ from datetime import datetime
 from sklearn import metrics
 from sklearn.linear_model import LogisticRegression
 from sklearn.base import BaseEstimator
+from sklearn.pipeline import Pipeline as sklearn_Pipeline
 
 
 def train_model(
     train_x: pd.DataFrame,
     train_y: pd.DataFrame,
     parameters: Dict[str, Any]
-) -> BaseEstimator:
+) -> sklearn_Pipeline:
     """Node for training a simple multi-class logistic regression model. The
     number of training iterations as well as the learning rate are taken from
     conf/project/parameters.yml. All of the data as well as the parameters
@@ -59,17 +60,25 @@ def train_model(
     # Build a multi-class logistic regression model
     model_params = parameters['model_params']
     model = LogisticRegression(**model_params)
-    # Fit
-    model.fit(train_x, train_y)
 
-    mlflow_sklearn.log_model(sk_model=model, artifact_path="model")
+    # Make pipeline
+    model_pipeline = sklearn_Pipeline(
+        steps=[
+            ('model', model),
+        ]
+    )
+
+    # Fit
+    model_pipeline.fit(train_x, train_y)
+
+    mlflow_sklearn.log_model(sk_model=model_pipeline, artifact_path="model")
     mlflow.log_params(model_params)
 
     return model
 
 
 def predict(
-    model: BaseEstimator, 
+    model: sklearn_Pipeline, 
     test_x: pd.DataFrame
 ) -> pd.DataFrame:
     """Node for making predictions given a pre-trained model and a test set.

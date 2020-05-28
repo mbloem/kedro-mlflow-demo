@@ -34,9 +34,13 @@ PLEASE DELETE THIS FILE ONCE YOU START WORKING ON YOUR OWN PROJECT!
 from typing import Any, Dict
 
 import pandas as pd
+from sklearn.preprocessing import StandardScaler
 
 
-def split_data(data: pd.DataFrame, example_test_data_ratio: float) -> Dict[str, Any]:
+def split_data(
+    data: pd.DataFrame, 
+    example_test_data_ratio: float
+) -> Dict[str, Any]:
     """Node for splitting the classical Iris data set into training and test
     sets, each split into features and labels.
     The split ratio parameter is taken from conf/project/parameters.yml.
@@ -72,3 +76,19 @@ def split_data(data: pd.DataFrame, example_test_data_ratio: float) -> Dict[str, 
         test_x=test_data_x,
         test_y=test_data_y,
     )
+
+
+def standardize_features(
+    train_x: pd.DataFrame,
+    test_x: pd.DataFrame,
+) -> Dict[str, Any]:
+    scaler = StandardScaler()
+    scaler.fit(train_x)
+    train_x = scaler.transform(train_x)
+    test_x = scaler.transform(test_x)
+
+    return dict(
+        train_x=train_x,
+        test_x=test_x,
+    )
+

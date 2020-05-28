@@ -34,11 +34,11 @@ Delete this when you start working on your own Kedro project.
 
 from kedro.pipeline import Pipeline, node
 
-from .nodes import split_data
+from .nodes import *
 
 
-def create_pipeline(**kwargs):
-    return Pipeline(
+def create_pipelines(**kwargs):
+    data_engr_no_scaling_pipeline = Pipeline(
         [
             node(
                 split_data,
@@ -52,3 +52,34 @@ def create_pipeline(**kwargs):
             )
         ]
     )
+    
+    data_engr_scaling_pipeline = Pipeline(
+        [
+            node(
+                split_data,
+                ["example_iris_data", "params:example_test_data_ratio"],
+                dict(
+                    train_x="example_train_x_not_scaled",
+                    train_y="example_train_y",
+                    test_x="example_test_x_not_scaled",
+                    test_y="example_test_y",
+                ),
+            ),
+            node(
+                standardize_features,
+                [
+                    "example_train_x_not_scaled",
+                    "example_test_x_not_scaled",
+                ],
+                dict(
+                    train_x="example_train_x",
+                    test_x="example_test_x"
+                ),
+            )
+        ]
+    )
+
+    return {
+        'data_engr_no_scaling': data_engr_no_scaling_pipeline,
+        'data_engr_scaling': data_engr_scaling_pipeline,
+    }
