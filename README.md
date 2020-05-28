@@ -1,7 +1,9 @@
 # Kedro + MLflow Demo
 
 This is a demo of how Kedro & MLflow can be used together, based on the instructions provided in [this article](https://medium.com/@QuantumBlack/deploying-and-versioning-data-pipelines-at-scale-942b1d81b5f5#).
-The demo is based on the example Iris project that Kedro optionally provides during creation of a new Kedro project.
+The demo is also based on the example iris project that Kedro optionally provides during creation of a new Kedro project.
+
+The demo has also been extended to demonstrate how scikit-learn [column transformers](https://scikit-learn.org/stable/modules/generated/sklearn.compose.ColumnTransformer.html) and [pipelines](https://scikit-learn.org/stable/modules/generated/sklearn.pipeline.Pipeline.html) can be used to incoroprate feature engineering calculations into trained model pipeline objects (rather than keeping those calculations in a data engineering pipeline, separate from the trained model and often requiring re-implementation for deployment).
 
 This project was created to serve as a demo for [a meetup talk](https://www.meetup.com/Data-Science-and-Analytics-West-Michigan/events/270553236/).
 
