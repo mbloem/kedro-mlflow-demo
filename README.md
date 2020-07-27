@@ -5,8 +5,6 @@ The demo is also based on the example iris project that Kedro optionally provide
 
 The demo has also been extended to demonstrate how scikit-learn [column transformers](https://scikit-learn.org/stable/modules/generated/sklearn.compose.ColumnTransformer.html) and [pipelines](https://scikit-learn.org/stable/modules/generated/sklearn.pipeline.Pipeline.html) can be used to incoroprate feature engineering calculations into trained model pipeline objects (rather than keeping those calculations in a data engineering pipeline, separate from the trained model and often requiring re-implementation for deployment).
 
-This project was created to serve as a demo for [a meetup talk](https://www.meetup.com/Data-Science-and-Analytics-West-Michigan/events/270553236/).
-
 ## Overview
 
 This is a Kedro+MLflow project.
