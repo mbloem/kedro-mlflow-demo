@@ -33,6 +33,8 @@ Delete this when you start working on your own Kedro project.
 """
 # pylint: disable=invalid-name
 
+import sys
+import os
 import logging
 from typing import Any, Dict
 
@@ -47,6 +49,9 @@ from sklearn.base import BaseEstimator
 from sklearn.pipeline import Pipeline as sklearn_Pipeline
 from sklearn.preprocessing import StandardScaler, MinMaxScaler
 from sklearn.compose import ColumnTransformer, make_column_transformer
+
+from mlinsights.plotting import pipeline2str, pipeline2dot
+from pyquickhelper.loghelper import run_cmd
 
 
 def train_model(
@@ -68,27 +73,17 @@ def train_model(
         col_transformer = ColumnTransformer(
             [
                 (
-                    'standard_scaler_sl',
-                    StandardScaler(),
-                    ["sepal_length"],
-                ),
-                (
-                    'standard_scaler_sw',
-                    StandardScaler(),
-                    ["sepal_width"],
-                ),
-                (
-                    'standard_scaler_pl',
-                    StandardScaler(),
-                    ["petal_length"],
-                ),
-                (
-                    'standard_scaler_pw',
-                    StandardScaler(),
-                    ["petal_width"],
+                    'standard_scaler',
+                    StandardScaler(copy=False),
+                    [
+                        "sepal_length",
+                        "sepal_width",
+                        "petal_length",
+                        "petal_width",
+                    ],
                 ),
             ],
-            remainder='passthrough',
+            remainder='drop',
         )
 
         # Make pipeline w/ scaler
@@ -109,8 +104,20 @@ def train_model(
     # Fit
     model_pipeline.fit(train_x, train_y)
 
+    mlflow.set_experiment('iris-example')
     mlflow_sklearn.log_model(sk_model=model_pipeline, artifact_path="model")
     mlflow.log_params(model_params)
+
+    # Print out the model pipeline
+    dot = pipeline2dot(model_pipeline, train_x)
+    dot_filename = 'pipeline_dot.dot'
+    with open(dot_filename, 'w', encoding='utf-8') as f:
+        f.write(dot)
+    if sys.platform.startswith("win") and "Graphviz" not in os.environ["PATH"]:
+        os.environ['PATH'] = os.environ['PATH'] + r';C:\Program Files (x86)\Graphviz2.38\bin'
+    cmd = "dot -G=300 -Tpng {0} -o{0}.png".format(dot_filename)
+    run_cmd(cmd, wait=True, fLOG=print)
+    mlflow.log_artifact('{0}.png'.format(dot_filename), 'model')
 
     return model_pipeline
 

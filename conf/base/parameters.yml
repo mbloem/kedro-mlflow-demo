@@ -3,7 +3,7 @@
 # remove the example pipeline from pipeline.py and the example nodes in
 # `src/pipelines/`
 example_test_data_ratio: 0.2
-model_standard_scaler: False
+model_standard_scaler: True
 model_params:
   penalty: l2
   dual: False
