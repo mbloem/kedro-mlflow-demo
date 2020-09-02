@@ -109,6 +109,7 @@ def train_model(
     mlflow.log_params(model_params)
 
     # Print out the model pipeline
+    # See: http://www.xavierdupre.fr/app/mlinsights/helpsphinx/notebooks/visualize_pipeline.html
     dot = pipeline2dot(model_pipeline, train_x)
     dot_filename = 'pipeline_dot.dot'
     with open(dot_filename, 'w', encoding='utf-8') as f:

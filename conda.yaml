@@ -7,3 +7,5 @@ dependencies:
       - kedro>=0.16
       - scikit-learn
       - mlflow
+      - mlinsights
+      - pyquickhelper
