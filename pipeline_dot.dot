@@ -1,0 +1,25 @@
+digraph{
+  orientation=portrait;
+  ranksep=0.25;
+  nodesep=0.05;
+  sch0[label="<f0> sepal_length|<f1> sepal_width|<f2> petal_length|<f3> petal_width",shape=record,fontsize=8];
+
+  node1[label="union",shape=box,style="filled,rounded",color=cyan,fontsize=12];
+  sch0:f0 -> node1;
+  sch0:f1 -> node1;
+  sch0:f2 -> node1;
+  sch0:f3 -> node1;
+  sch1[label="<f0> -v-0",shape=record,fontsize=8];
+  node1 -> sch1:f0;
+
+  node2[label="StandardScaler",shape=box,style="filled,rounded",color=cyan,fontsize=12];
+  sch1:f0 -> node2;
+  sch2[label="<f0> -v-1",shape=record,fontsize=8];
+  node2 -> sch2:f0;
+
+  node3[label="LogisticRegression",shape=box,style="filled,rounded",color=yellow,fontsize=12];
+  sch2:f0 -> node3;
+  sch3[label="<f0> PredictedLabel|<f1> Probabilities",shape=record,fontsize=8];
+  node3 -> sch3:f0;
+  node3 -> sch3:f1;
+}
